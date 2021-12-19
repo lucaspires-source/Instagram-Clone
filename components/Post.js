@@ -16,6 +16,15 @@ function Post({
         <DotsHorizontalIcon className="h-5" />
       </div>
       <img src={img} alt="post" className="object-cover w-full" />
+      <div className="flex justify-between px-4 pt-4">
+        <div className="flex space-x-4">
+          <HeartIcon className="postBtn" />
+          <ChatIcon className="postBtn" />
+          <PaperAirplaneIcon className="postBtn" />
+        </div>
+        <BookmarkIcon className="postBtn" />
+      </div>
+
     </div>
   );
 }
