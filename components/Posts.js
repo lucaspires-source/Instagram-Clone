@@ -6,7 +6,7 @@ const posts = [
     id: '123',
     username: 'o_lucaspires',
     userImg: 'https://avatars.githubusercontent.com/u/60105171?v=4',
-    img: 'https://avatars.githubusercontent.com/u/60105171?v=4',
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Tiger_shark.jpg/1200px-Tiger_shark.jpg',
     caption: 'Pai ta on',
   },
 
@@ -14,8 +14,8 @@ const posts = [
     id: '1234',
     username: 'o_lucaspires',
     userImg: 'https://avatars.githubusercontent.com/u/60105171?v=4',
-    img: 'https://avatars.githubusercontent.com/u/60105171?v=4',
-    caption: 'Pai ta on',
+    img: 'https://universodospeixes.com.br/wp-content/uploads/2019/05/blacktip-reef-shark.jpg',
+    caption: 'E-Sharko',
   },
 ];
 function Posts() {
