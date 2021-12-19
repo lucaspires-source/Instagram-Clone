@@ -31,6 +31,12 @@ function Post({
         </span>
         {caption}
       </p>
+      <form className="flex items-center p-4">
+        <EmojiHappyIcon className="h-7" />
+        <input type="text" className="border-none flex-1 focus:ring-0" placeholder="Add a comment ..." />
+        {/* eslint-disable-next-line react/button-has-type */}
+        <button className="font-semibold text-blue-400"> Post </button>
+      </form>
     </div>
   );
 }
