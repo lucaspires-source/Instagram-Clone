@@ -2,7 +2,7 @@ import React from 'react';
 import {
   BookmarkIcon, ChatIcon, DotsHorizontalIcon, HeartIcon, PaperAirplaneIcon, EmojiHappyIcon,
 } from '@heroicons/react/outline';
-
+import PropTypes from 'prop-types';
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid';
 
 function Post({
@@ -24,9 +24,24 @@ function Post({
         </div>
         <BookmarkIcon className="postBtn" />
       </div>
-
+      <p className="p-5 truncate">
+        <span className="font-bold mr-1">
+          {username}
+          {' '}
+        </span>
+        {caption}
+      </p>
     </div>
   );
 }
 
 export default Post;
+
+Post.propTypes = {
+  username: PropTypes.string.isRequired,
+  userImg: PropTypes.string.isRequired,
+  caption: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  img: PropTypes.string.isRequired,
+
+};
