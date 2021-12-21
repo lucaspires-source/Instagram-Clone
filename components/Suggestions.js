@@ -3,7 +3,6 @@ import faker from 'faker';
 
 function Suggestions() {
   const [suggestion, setSuggestions] = useState([]);
-
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     const suggestions = [...Array(5)].map((_, i) => ({
