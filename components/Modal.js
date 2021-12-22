@@ -5,13 +5,50 @@ import React, { Fragment, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { Dialog, Transition } from '@headlessui/react';
 import { CameraIcon } from '@heroicons/react/outline';
+import {
+  addDoc, collection, doc, serverTimestamp, updateDoc,
+} from 'firebase/firestore';
+import { useSession } from 'next-auth/react';
+import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { modalState } from '../atoms/modalAtom';
+import { db, storage } from '../firebase';
 
 function Modal() {
   const [open, setOpen] = useRecoilState(modalState);
   const filePickerRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const captionRef = useRef(null);
+  const { data: session } = useSession();
+
+  const uploadPost = async () => {
+    if (loading) return;
+    setLoading(true);
+
+    const docRef = await addDoc(collection(db, 'posts'), {
+      username: session.user.username,
+      caption: captionRef.current.value,
+      profileImg: session.user.image,
+      timestamp: serverTimestamp(),
+    });
+
+    console.log(docRef.id);
+
+    const imageRef = ref(storage, `posts/${docRef.id}/image`);
+
+    // eslint-disable-next-line no-unused-vars
+    await uploadString(imageRef, selectedFile, 'data_url').then(async (snapshot) => {
+      const donwloadUrl = await getDownloadURL(imageRef);
+      await updateDoc(doc(db, 'posts', docRef.id), {
+        image: donwloadUrl,
+      });
+    });
+
+    setOpen(false);
+    setLoading(false);
+    setSelectedFile(null);
+  };
+
   const addImageToPost = (e) => {
     const reader = new FileReader();
     if (e.target.files[0]) {
@@ -57,8 +94,8 @@ function Modal() {
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-6">
-                  <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus-ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300 disable:cursor-not-allowed hover:disabled:bg-gray-300">
-                    Upload
+                  <button onClick={uploadPost} disabled={!selectedFile} type="button" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus-ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300 disable:cursor-not-allowed hover:disabled:bg-gray-300">
+                    {loading ? 'Uploading ...' : 'Upload Post'}
                   </button>
                 </div>
               </div>
