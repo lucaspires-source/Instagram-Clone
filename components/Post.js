@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BookmarkIcon, ChatIcon, DotsHorizontalIcon, HeartIcon, PaperAirplaneIcon, EmojiHappyIcon,
 } from '@heroicons/react/outline';
 import PropTypes from 'prop-types';
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid';
 import { useSession } from 'next-auth/react';
-import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
+import {
+  addDoc, collection, onSnapshot, orderBy, query, serverTimestamp,
+} from '@firebase/firestore';
 import { db } from '../firebase';
 
 function Post({
@@ -27,6 +29,9 @@ function Post({
       timestamp: serverTimestamp(),
     });
   };
+
+  useEffect(() => onSnapshot(query(collection(db, 'posts', id, 'comments'), orderBy('timestamp', 'desc')), (snapshot) => setComments(snapshot.docs)), [db]);
+
   return (
     <div className="bg-white my-7 border rounded-sm">
       <div className="flex items-center p-5">
@@ -57,6 +62,25 @@ function Post({
         </span>
         {caption}
       </p>
+
+      {
+        comments.length > 0 && (
+        <div className="ml-10 h-20 overflow-y-scroll scrollbar-thumb-black scrollbar-thin ">
+          {
+                comments.map((com) => (
+                  <div key={com.id} className=" flex items-center space-x-2 mb-3">
+                    <img src={com.data().userImage} alt="avatar" className="h-7 rounded-full" />
+                    <p className="text-sm flex-1">
+                      <span className="font-bold">{com.data().username}</span>
+                      {' '}
+                      {com.data().comment}
+                    </p>
+                  </div>
+                ))
+              }
+        </div>
+        )
+      }
       {
         session
 
